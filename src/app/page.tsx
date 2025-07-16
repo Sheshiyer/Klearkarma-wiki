@@ -1,103 +1,283 @@
 import Image from "next/image";
+import Link from "next/link";
+import { getAllDocuments, getFolderTitle } from "@/lib/markdown";
+import { BookOpenIcon, DocumentTextIcon, FolderIcon } from "@heroicons/react/24/outline";
+import { 
+  ArrowTrendingUpIcon, 
+  UsersIcon, 
+  CogIcon, 
+  PaintBrushIcon, 
+  ChartBarIcon, 
+  BriefcaseIcon, 
+  ScaleIcon,
+  BeakerIcon,
+  MegaphoneIcon,
+  PencilIcon
+} from "@heroicons/react/24/outline";
+import AnimatedCard, { AnimatedSection, AnimatedText } from '@/components/AnimatedCard';
+
+// Helper function to get category icon
+function getCategoryIcon(folderId: string) {
+  const iconMap: Record<string, any> = {
+    '01_BUSINESS_STRATEGY': ArrowTrendingUpIcon,
+    '02_FINANCIAL_MODELS': ChartBarIcon,
+    '03_TECHNICAL': CogIcon,
+    '03_TECHNICAL_ARCHITECTURE': CogIcon,
+    '04_DESIGN': PaintBrushIcon,
+    '04_DESIGN_BRAND': PaintBrushIcon,
+    '05_PRODUCT_STRATEGY': BeakerIcon,
+    '06_MARKETING': MegaphoneIcon,
+    '06_MARKETING_STRATEGY': MegaphoneIcon,
+    '07_CONTENT': PencilIcon,
+    '07_CONTENT_COPY': PencilIcon,
+    '08_OPERATIONS': BriefcaseIcon,
+    '09_ANALYTICS': ChartBarIcon,
+    '09_ANALYTICS_RESEARCH': ChartBarIcon,
+    '10_STAKEHOLDER_MATERIALS': UsersIcon,
+    '11_PROJECT_MANAGEMENT': FolderIcon,
+    '12_LEGAL_COMPLIANCE': ScaleIcon,
+    '12_PROJECT_MANAGEMENT': FolderIcon
+  };
+  
+  return iconMap[folderId] || DocumentTextIcon;
+}
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const wikiStructure = getAllDocuments();
+  const totalDocuments = Object.values(wikiStructure).reduce(
+    (total, sections) => total + sections.filter(doc => doc.content).length,
+    0
+  );
+  
+  // Calculate documents per category
+   const categoryStats = Object.entries(wikiStructure).map(([folderId, documents]) => ({
+     id: folderId,
+     title: getFolderTitle(folderId),
+     count: documents.length,
+     icon: getCategoryIcon(folderId)
+   })).sort((a, b) => a.id.localeCompare(b.id));
+  
+  const totalFolders = Object.keys(wikiStructure).length;
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  return (
+    <div className="min-h-screen">
+      {/* Main Content - Full Width */}
+      <div className="h-screen overflow-y-auto">
+        <div className="p-6">
+        {/* Welcome Header */}
+        <AnimatedSection className="mb-8" delay={1.0}>
+          <AnimatedCard className="p-6" delay={1.1}>
+            <AnimatedText delay={1.2}>
+              <h2 className="text-3xl font-bold text-white mb-2">Welcome to Klear Karma</h2>
+              <p className="text-white/70">Comprehensive documentation and knowledge base for the Klear Karma project.</p>
+            </AnimatedText>
+          </AnimatedCard>
+        </AnimatedSection>
+
+        {/* Bento Grid Layout */}
+        <AnimatedSection delay={1.3}>
+          <div className="grid grid-cols-4 grid-rows-4 gap-4 h-[calc(100vh-200px)]">
+            {/* Logo Card - First position */}
+            <AnimatedCard
+              className="col-span-1 row-span-1 glass-card p-6 flex flex-col items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group"
+              delay={1.4}
+            >
+              <Link href="/" className="block h-full w-full flex flex-col items-center justify-center">
+                <div className="mb-4">
+                  <Image
+                    src="/Klear Karma.png"
+                    alt="Klear Karma Logo"
+                    width={48}
+                    height={48}
+                    className="rounded-xl ring-2 ring-white/20 shadow-lg group-hover:ring-white/40 transition-all duration-300"
+                    priority
+                  />
+                </div>
+                <h3 className="text-lg font-bold text-white group-hover:text-blue-200 transition-colors text-center">
+                  Klear Karma
+                </h3>
+                <p className="text-xs text-white/60 text-center mt-1">
+                  Knowledge Base
+                </p>
+              </Link>
+            </AnimatedCard>
+            
+            {/* Stats Cards */}
+            <AnimatedCard
+              className="col-span-1 row-span-1 glass-card p-4 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group"
+              delay={1.45}
+            >
+              <div className="h-full flex flex-col items-center justify-center text-center">
+                <div className="text-2xl font-bold text-white mb-1">{Object.keys(wikiStructure).length}</div>
+                <div className="text-xs text-white/60">Sections</div>
+              </div>
+            </AnimatedCard>
+            
+            <AnimatedCard
+              className="col-span-1 row-span-1 glass-card p-4 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group"
+              delay={1.5}
+            >
+              <div className="h-full flex flex-col items-center justify-center text-center">
+                <div className="text-2xl font-bold text-white mb-1">{totalDocuments}</div>
+                <div className="text-xs text-white/60">Documents</div>
+              </div>
+            </AnimatedCard>
+            
+            {Object.entries(wikiStructure).map(([folderId, sections], index) => {
+              const documentsCount = sections.filter(doc => doc.content).length;
+              const firstDoc = sections.find(doc => doc.content);
+              
+              // Define special sizing for certain cards (adjusted for logo + stats cards)
+              const getCardClass = (index: number) => {
+                switch(index) {
+                  case 0: return "col-span-1 row-span-2"; // Business Strategy - tall
+                  case 1: return "col-span-2 row-span-1"; // Financial Models - wide
+                  case 2: return "col-span-1 row-span-1"; // Technical Architecture
+                  case 3: return "col-span-1 row-span-1"; // Design & Brand
+                  case 4: return "col-span-1 row-span-1"; // Product Strategy
+                  case 5: return "col-span-2 row-span-1"; // Marketing Strategy - wide
+                  case 6: return "col-span-1 row-span-1"; // Content & Copy
+                  case 7: return "col-span-1 row-span-1"; // Operations
+                  case 8: return "col-span-1 row-span-1"; // Analytics & Research
+                  case 9: return "col-span-1 row-span-1"; // Stakeholder Materials
+                  case 10: return "col-span-2 row-span-1"; // Project Management - wide
+                  default: return "col-span-1 row-span-1";
+                }
+              };
+
+              return (
+                <AnimatedCard
+                  key={folderId}
+                  className={`glass-card p-4 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group ${getCardClass(index)}`}
+                  delay={1.4 + index * 0.05}
+                >
+                  <Link href={firstDoc ? `/wiki/${firstDoc.id}` : '#'} className="block h-full">
+                    <div className="flex flex-col h-full">
+                      <div className="flex items-center mb-3">
+                        <div className="w-6 h-6 bg-blue-500/20 backdrop-blur-sm rounded-lg flex items-center justify-center mr-2 ring-1 ring-white/20">
+                          <BookOpenIcon className="w-4 h-4 text-white/80" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-white group-hover:text-blue-200 transition-colors">
+                          {getFolderTitle(folderId)}
+                        </h3>
+                      </div>
+                      
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div className="text-xs text-white/60 mb-2">
+                          {documentsCount} document{documentsCount !== 1 ? 's' : ''}
+                        </div>
+                        
+                        {sections.length > 0 && (
+                          <div className="space-y-1">
+                            {sections.slice(0, getCardClass(index).includes('row-span-2') ? 4 : 2).map((section) => (
+                              <div key={section.id} className="text-xs text-white/50 truncate">
+                                {section.content ? '📄' : '📁'} {section.title}
+                              </div>
+                            ))}
+                            {sections.length > 2 && !getCardClass(index).includes('row-span-2') && (
+                              <div className="text-xs text-white/40">+{sections.length - 2} more</div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                </AnimatedCard>
+              );
+            })}
+          </div>
+        </AnimatedSection>
+
+        {/* Quick Start */}
+          <AnimatedSection delay={1.5}>
+            <AnimatedCard className="mt-16 p-8" delay={1.6}>
+              <AnimatedText delay={1.8}>
+                <h2 className="text-2xl font-bold text-white mb-4 drop-shadow-lg">
+                  Quick Start Guide
+                </h2>
+              </AnimatedText>
+              <div className="grid md:grid-cols-3 gap-6">
+                <AnimatedText className="text-center" delay={2.0}>
+                  <div className="w-12 h-12 bg-blue-500/30 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-3 ring-2 ring-white/30">
+                    <span className="text-white font-bold drop-shadow-sm">1</span>
+                  </div>
+                  <h3 className="font-semibold text-white mb-2 drop-shadow-sm">Explore Sections</h3>
+                  <p className="text-white/70 text-sm drop-shadow-sm">Browse through our organized documentation sections above</p>
+                </AnimatedText>
+                <AnimatedText className="text-center" delay={2.2}>
+                  <div className="w-12 h-12 bg-blue-500/30 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-3 ring-2 ring-white/30">
+                    <span className="text-white font-bold drop-shadow-sm">2</span>
+                  </div>
+                  <h3 className="font-semibold text-white mb-2 drop-shadow-sm">Navigate</h3>
+                  <p className="text-white/70 text-sm drop-shadow-sm">Use the sidebar to navigate between documents and sections</p>
+                </AnimatedText>
+                <AnimatedText className="text-center" delay={2.4}>
+                  <div className="w-12 h-12 bg-blue-500/30 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-3 ring-2 ring-white/30">
+                    <span className="text-white font-bold drop-shadow-sm">3</span>
+                  </div>
+                  <h3 className="font-semibold text-white mb-2 drop-shadow-sm">Learn</h3>
+                  <p className="text-white/70 text-sm drop-shadow-sm">Dive deep into our comprehensive knowledge base</p>
+                </AnimatedText>
+              </div>
+            </AnimatedCard>
+          </AnimatedSection>
+
+          {/* Category Breakdown */}
+          <AnimatedSection delay={2.6}>
+            <AnimatedCard className="mt-8 p-8" delay={2.7}>
+              <AnimatedText delay={2.8}>
+                <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-lg">
+                  Documentation Categories
+                </h2>
+                <p className="text-white/70 mb-6 drop-shadow-sm">
+                  Comprehensive breakdown of all {totalDocuments} documents across {totalFolders} categories
+                </p>
+              </AnimatedText>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {categoryStats.map((category, index) => {
+                  const IconComponent = category.icon;
+                  return (
+                    <AnimatedCard 
+                      key={category.id}
+                      className="glass-card p-4 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group"
+                      delay={2.9 + index * 0.05}
+                    >
+                      <Link href={`/wiki`} className="block h-full">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-blue-500/20 backdrop-blur-sm rounded-lg flex items-center justify-center ring-1 ring-white/20 group-hover:bg-blue-500/30 transition-colors">
+                            <IconComponent className="w-5 h-5 text-white/80" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-white group-hover:text-blue-200 transition-colors text-sm">
+                              {category.title}
+                            </h3>
+                            <p className="text-white/60 text-xs">
+                              {category.count} document{category.count !== 1 ? 's' : ''}
+                            </p>
+                          </div>
+                          <div className="text-lg font-bold text-white/80 group-hover:text-white transition-colors">
+                            {category.count}
+                          </div>
+                        </div>
+                      </Link>
+                    </AnimatedCard>
+                  );
+                })}
+              </div>
+              
+              <AnimatedText delay={3.2}>
+                <div className="mt-6 p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-white/70">Total Documentation Coverage:</span>
+                    <span className="text-white font-semibold">{totalDocuments} documents across {totalFolders} categories</span>
+                  </div>
+                </div>
+              </AnimatedText>
+            </AnimatedCard>
+          </AnimatedSection>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }

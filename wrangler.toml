@@ -1,0 +1,51 @@
+name = "klearkarma-wiki"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Pages configuration
+[env.production]
+name = "klearkarma-wiki"
+
+[env.preview]
+name = "klearkarma-wiki-preview"
+
+# Build configuration
+pages_build_output_dir = "out"
+
+# Environment variables (add your specific vars here)
+[vars]
+NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
+
+# KV Namespaces (for future backend integrations)
+[[kv_namespaces]]
+binding = "WIKI_CACHE"
+preview_id = "preview_wiki_cache"
+id = "production_wiki_cache"
+
+[[kv_namespaces]]
+binding = "USER_DATA"
+preview_id = "preview_user_data"
+id = "production_user_data"
+
+# R2 Buckets (for file storage)
+[[r2_buckets]]
+binding = "WIKI_ASSETS"
+bucket_name = "klearkarma-assets"
+preview_bucket_name = "klearkarma-assets-preview"
+
+[[r2_buckets]]
+binding = "USER_UPLOADS"
+bucket_name = "klearkarma-uploads"
+preview_bucket_name = "klearkarma-uploads-preview"
+
+# Durable Objects (for real-time features)
+[[durable_objects.bindings]]
+name = "WIKI_SESSIONS"
+class_name = "WikiSession"
+script_name = "wiki-sessions"
+
+# Analytics
+[[analytics_engine_datasets]]
+binding = "WIKI_ANALYTICS"
+dataset = "klearkarma_analytics"
