@@ -61,8 +61,8 @@ export default async function WikiPage({ params }: WikiPageProps) {
 
   return (
     <WikiLayout wikiStructure={wikiStructure}>
-      <div className="min-h-screen bg-white">
-      <div className="max-w-none px-6 py-6">
+      <div className="h-full bg-white">
+      <div className="max-w-none px-6 py-6 h-full">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
           <Link href="/" className="hover:text-gray-700 transition-colors">
@@ -93,12 +93,12 @@ export default async function WikiPage({ params }: WikiPageProps) {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {document.title}
           </h1>
-          {document.frontmatter?.description && (
+          {document.frontmatter?.description && typeof document.frontmatter.description === 'string' && (
             <p className="text-lg text-gray-600">
               {document.frontmatter.description}
             </p>
           )}
-          {document.frontmatter?.lastUpdated && (
+          {document.frontmatter?.lastUpdated && typeof document.frontmatter.lastUpdated === 'string' && (
             <p className="text-sm text-gray-500 mt-2">
               Last updated: {new Date(document.frontmatter.lastUpdated).toLocaleDateString()}
             </p>
@@ -106,7 +106,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
         </div>
 
         {/* Document Content */}
-        <div className="bg-white">
+        <div className="bg-transparent">
           <MarkdownRenderer 
             content={document.content}
             className="max-w-none"
@@ -117,7 +117,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex justify-between items-center">
             <div className="text-sm text-gray-500">
-              {document.frontmatter?.author && (
+              {document.frontmatter?.author && typeof document.frontmatter.author === 'string' && (
                 <span>By {document.frontmatter.author}</span>
               )}
             </div>
