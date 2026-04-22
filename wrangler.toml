@@ -2,15 +2,14 @@ name = "klearkarma-wiki"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Pages configuration
+# Pages configuration - this is the required field for Pages
+pages_build_output_dir = "out"
+
 [env.production]
 name = "klearkarma-wiki"
 
 [env.preview]
 name = "klearkarma-wiki-preview"
-
-# Build configuration
-pages_build_output_dir = "out"
 
 # Environment variables (add your specific vars here)
 [vars]
